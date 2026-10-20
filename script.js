@@ -22,30 +22,30 @@
      dan tiga soal kandidat (pick = urutan indeks pool, dari poin terbesar).
      Kata kunci tidak pernah ditampilkan di layar. */
   const GROUPS = [
-    /* RONDE 1 : perlawanan bersenjata 1945-1946 */
+    /* RONDE 1 : perjuangan mempertahankan kemerdekaan 1945-1946 */
     {
       pool: [
         { t: 'Pertempuran Surabaya 10 November 1945', k: ['pertempuran surabaya', 'surabaya', '10 november 1945'] },
-        { t: 'Bandung Lautan Api', k: ['bandung lautan api', 'lautan api', 'bandung'] },
+        { t: 'Bandung Lautan Api 24 Maret 1946', k: ['bandung lautan api', 'lautan api', 'bandung'] },
         { t: 'Pertempuran Ambarawa', k: ['pertempuran ambarawa', 'ambarawa'] },
         { t: 'Pertempuran Lima Hari di Semarang', k: ['lima hari semarang', 'pertempuran lima hari', 'lima hari'] },
         { t: 'Pertempuran Medan Area', k: ['pertempuran medan area', 'medan area'] },
         { t: 'Puputan Margarana 20 November 1946', k: ['puputan margarana', 'margarana', 'puputan bali'] },
-        { t: 'Peran Bung Tomo', k: ['bung tomo', 'peran bung tomo'] },
-        { t: 'Kedatangan Sekutu dan NICA', k: ['sekutu', 'nica', 'kedatangan sekutu'] },
+        { t: 'Bung Tomo membakar semangat rakyat Surabaya', k: ['bung tomo', 'tomo'] },
+        { t: 'Kedatangan Sekutu dan NICA yang memicu perlawanan', k: ['sekutu', 'nica', 'kedatangan sekutu'] },
         { t: 'Proklamasi Kemerdekaan 17 Agustus 1945', k: ['proklamasi', 'proklamasi kemerdekaan', '17 agustus 1945'] }
       ],
       candidates: [
-        { id: 'R1-A', text: 'Sebutkan perlawanan bersenjata rakyat Indonesia setelah Proklamasi 1945.', pick: [0, 1, 2, 3, 4, 5, 6, 7] },
-        { id: 'R1-B', text: 'Peristiwa apa yang menjadi awal perlawanan rakyat setelah Proklamasi?', pick: [7, 8, 0, 6, 3, 2, 1, 4] },
-        { id: 'R1-C', text: 'Sebutkan pertempuran atau tokoh perjuangan tahun 1945 sampai 1946 yang kamu ketahui.', pick: [0, 5, 1, 3, 2, 4, 6, 7] }
+        { id: 'R1-A', text: 'Sebutkan peristiwa dan tokoh penting perjuangan mempertahankan kemerdekaan tahun 1945 sampai 1946.', pick: [0, 1, 2, 3, 4, 5, 7, 6] },
+        { id: 'R1-B', text: 'Sebutkan tokoh dan pertempuran melawan Sekutu dan NICA pada tahun 1945 sampai 1946.', pick: [6, 7, 0, 3, 2, 4, 1, 5] },
+        { id: 'R1-C', text: 'Sebutkan peristiwa awal perjuangan setelah Proklamasi Kemerdekaan.', pick: [8, 7, 0, 6, 3, 2, 1, 4] }
       ]
     },
 
-    /* RONDE 2 : agresi dan perundingan 1946-1949 */
+    /* RONDE 2 : agresi dan perundingan Indonesia-Belanda 1946-1949 */
     {
       pool: [
-        { t: 'Perjanjian Linggarjati', k: ['linggarjati', 'perjanjian linggarjati'] },
+        { t: 'Perjanjian Linggarjati 1946', k: ['linggarjati', 'perjanjian linggarjati'] },
         { t: 'Agresi Militer Belanda I 1947', k: ['agresi militer belanda i', 'agresi belanda 1', 'agresi 1'] },
         { t: 'Perjanjian Renville 1948', k: ['renville', 'perjanjian renville'] },
         { t: 'Agresi Militer Belanda II 1948', k: ['agresi militer belanda ii', 'agresi belanda 2', 'agresi 2'] },
@@ -55,13 +55,13 @@
         { t: 'Gerilya Jenderal Sudirman', k: ['sudirman', 'jenderal sudirman', 'gerilya sudirman'] }
       ],
       candidates: [
-        { id: 'R2-A', text: 'Sebutkan perundingan Indonesia dan Belanda yang terjadi tahun 1946 sampai 1949.', pick: [0, 2, 5, 6, 4, 7, 1, 3] },
-        { id: 'R2-B', text: 'Sebutkan agresi atau serangan Belanda dan perjuangan Indonesia tahun 1947 sampai 1949.', pick: [3, 1, 4, 7, 2, 0, 5, 6] },
-        { id: 'R2-C', text: 'Sebutkan perjanjian dan peristiwa penting perang kemerdekaan tahun 1947 sampai 1949.', pick: [1, 3, 2, 0, 4, 5, 6, 7] }
+        { id: 'R2-A', text: 'Sebutkan peristiwa penting perjuangan dan perundingan Indonesia dan Belanda tahun 1946 sampai 1949.', pick: [0, 2, 5, 6, 4, 7, 1, 3] },
+        { id: 'R2-B', text: 'Sebutkan peristiwa penting masa revolusi kemerdekaan tahun 1946 sampai 1949.', pick: [3, 1, 4, 7, 2, 0, 5, 6] },
+        { id: 'R2-C', text: 'Sebutkan peristiwa penting antara Indonesia dan Belanda pada tahun 1946 sampai 1949.', pick: [1, 3, 2, 0, 4, 5, 6, 7] }
       ]
     },
 
-    /* RONDE 3 : awal NKRI dan Demokrasi Liberal 1950-1952 */
+    /* RONDE 3 : awal negara kesatuan dan Demokrasi Liberal 1950-1952 */
     {
       pool: [
         { t: 'Pembubaran RIS dan terbentuknya NKRI 17 Agustus 1950', k: ['nkri', 'negara kesatuan', 'pembubaran ris'] },
@@ -80,13 +80,13 @@
         { t: 'Peristiwa 17 Oktober 1952', k: ['17 oktober 1952', 'peristiwa 17 oktober', '17 oktober'] }
       ],
       candidates: [
-        { id: 'R3-A', text: 'Sebutkan kabinet yang memerintah pada masa Demokrasi Liberal tahun 1950 sampai 1952.', pick: [2, 3, 4, 5, 0, 1, 6] },
-        { id: 'R3-B', text: 'Sebutkan pemberontakan atau gerakan di daerah pada tahun 1950 sampai 1952.', pick: [9, 10, 11, 12, 13, 8, 7] },
-        { id: 'R3-C', text: 'Sebutkan kebijakan ekonomi dan peristiwa penting awal negara kesatuan.', pick: [7, 8, 6, 0, 1, 13, 12] }
+        { id: 'R3-A', text: 'Sebutkan kabinet dan kebijakan pemerintah pada masa Demokrasi Liberal awal.', pick: [2, 3, 4, 5, 6, 8, 7] },
+        { id: 'R3-B', text: 'Sebutkan pemberontakan dan peristiwa politik dalam negeri pada tahun 1950 sampai 1952.', pick: [9, 10, 11, 12, 13, 0, 1] },
+        { id: 'R3-C', text: 'Sebutkan kebijakan ekonomi, kabinet, dan tonggak awal negara kesatuan.', pick: [0, 1, 6, 7, 8, 2, 4] }
       ]
     },
 
-    /* RONDE 4 : pemilu dan dinamika politik 1955-1958 */
+    /* RONDE 4 : pemilu dan dinamika politik Demokrasi Liberal 1955-1958 */
     {
       pool: [
         { t: 'Pemilu DPR 29 September 1955', k: ['pemilu 1955', 'pemilu dpr', '29 september 1955'] },
@@ -101,9 +101,9 @@
         { t: 'Pemberontakan PRRI Permesta 1958', k: ['prri permesta', 'prri', 'permesta'] }
       ],
       candidates: [
-        { id: 'R4-A', text: 'Sebutkan partai besar yang ikut Pemilu 1955.', pick: [2, 3, 4, 5, 0, 1] },
-        { id: 'R4-B', text: 'Sebutkan peristiwa politik penting tahun 1955 sampai 1958.', pick: [0, 6, 7, 8, 9, 1] },
-        { id: 'R4-C', text: 'Sebutkan pemberontakan dan kebijakan politik pada tahun 1955 sampai 1958.', pick: [9, 7, 8, 6, 1, 5] }
+        { id: 'R4-A', text: 'Sebutkan partai besar dan pemilu yang berlangsung pada tahun 1955.', pick: [2, 3, 4, 5, 0, 1] },
+        { id: 'R4-B', text: 'Sebutkan peristiwa politik penting pada tahun 1955 sampai 1958.', pick: [0, 6, 7, 8, 9, 1] },
+        { id: 'R4-C', text: 'Sebutkan partai dan peristiwa politik pada masa Demokrasi Liberal 1955 sampai 1958.', pick: [3, 5, 6, 7, 9, 4] }
       ]
     },
 
@@ -113,14 +113,14 @@
         { t: 'Dekrit Presiden 5 Juli 1959', k: ['dekrit', 'dekrit presiden', '5 juli 1959'] },
         { t: 'Demokrasi Terpimpin', k: ['demokrasi terpimpin', 'terpimpin'] },
         { t: 'Trikora 1961', k: ['trikora', 'tri komando rakyat'] },
-        { t: 'Konfrontasi Malaysia', k: ['konfrontasi malaysia', 'konfrontasi', 'ganyang malaysia'] },
+        { t: 'Konfrontasi Malaysia 1963-1966', k: ['konfrontasi malaysia', 'konfrontasi', 'ganyang malaysia'] },
         { t: 'Peristiwa G30S 1965', k: ['g30s', 'g30s pki', 'gestapu', '30 september 1965'] },
         { t: 'Supersemar 11 Maret 1966', k: ['supersemar', 'surat perintah 11 maret', '11 maret 1966'] }
       ],
       candidates: [
-        { id: 'R5-A', text: 'Sebutkan peristiwa atau kebijakan masa Orde Lama tahun 1959 sampai 1966.', pick: [0, 1, 4, 5, 3] },
-        { id: 'R5-B', text: 'Sebutkan peristiwa-peristiwa penting menjelang akhir Orde Lama.', pick: [4, 5, 3, 1, 0] },
-        { id: 'R5-C', text: 'Sebutkan kebijakan Presiden Soekarno sejak tahun 1959.', pick: [1, 0, 2, 3, 4] }
+        { id: 'R5-A', text: 'Sebutkan kebijakan dan peristiwa penting masa Orde Lama tahun 1959 sampai 1966.', pick: [0, 1, 2, 3, 5] },
+        { id: 'R5-B', text: 'Sebutkan peristiwa dan kebijakan yang mewarnai akhir masa Demokrasi Terpimpin.', pick: [4, 5, 3, 1, 0] },
+        { id: 'R5-C', text: 'Sebutkan surat, dekrit, atau kebijakan yang dikeluarkan Presiden Soekarno.', pick: [0, 5, 1, 2, 3] }
       ]
     }
   ];
