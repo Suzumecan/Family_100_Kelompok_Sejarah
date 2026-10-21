@@ -17,10 +17,10 @@
   const TOTAL_ROUNDS = ROUND_POINTS.length;
   const MUTE_KEY = 'family100-muted';
 
-/* ---------- BANK SOAL ----------
+  /* ---------- BANK SOAL ----------
      Setiap ronde: pool jawaban (t = teks, k = kata kunci tersembunyi)
-     dan dua soal kandidat (pick = urutan indeks pool, dari poin terbesar).
-     Jumlah pick harus sama dengan jumlah survei pada ROUND_POINTS (8).
+     dan kandidat soal (pick = urutan indeks pool, dari poin terbesar).
+     Jumlah survei per ronde diatur di ROUND_POINTS.
      Kata kunci tidak pernah ditampilkan di layar. */
   const GROUPS = [
     /* RONDE 1 : perjuangan mempertahankan kemerdekaan 1945-1946 */
@@ -362,16 +362,22 @@
   /* =========================================================
      PEMBUATAN, MULAI, DAN AKHIR RONDE
      ========================================================= */
+
+  /* Mengambil jumlah survei yang benar untuk ronde r.
+     Jika kandidat memiliki lebih banyak pick, kelebihannya dipotong.
+     Jika kurang, kandidat tidak dipakai (lihat startRound). */
   function makeRound(r, q) {
     const pool = GROUPS[r].pool;
+    const need = ROUND_POINTS[r].length;
+    const picks = q.pick.slice(0, need);
     return {
       q: q,
-      answers: q.pick.map((pi, idx) => ({
+      answers: picks.map((pi, idx) => ({
         t: pool[pi].t,
         k: pool[pi].k.map(norm),
         pts: ROUND_POINTS[r][idx]
       })),
-      opened: q.pick.map(() => false),
+      opened: picks.map(() => false),
       strikes: [0, 0],
       pool: 0,
       gained: 0,
@@ -390,7 +396,15 @@
   }
 
   function startRound(r) {
-    const q = GROUPS[r].candidates.find((c) => state.usedIds.indexOf(c.id) < 0);
+    const need = ROUND_POINTS[r].length;
+    const q = GROUPS[r].candidates.find((c) => {
+      if (state.usedIds.indexOf(c.id) >= 0) return false;
+      if (c.pick.length < need) {
+        console.error('Kandidat ' + c.id + ' hanya punya ' + c.pick.length + ' jawaban, dibutuhkan ' + need + '. Kandidat dilewati.');
+        return false;
+      }
+      return true;
+    });
     if (!q) return false;
     state.usedIds.push(q.id);
     state.rounds[r] = makeRound(r, q);
