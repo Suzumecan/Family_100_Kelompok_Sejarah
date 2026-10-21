@@ -73,7 +73,7 @@
 
     <div id="msg" class="msg" aria-live="polite"></div>
 
-    <!-- Babak rebutan -->
+        <!-- Babak rebutan -->
     <div id="rebutan" class="panel">
       <div class="rebutan-row">
         <div class="buzz-box">
@@ -91,10 +91,10 @@
       <div id="adu-result" class="adu-result hidden">
         <div class="adu-title">HASIL ADU CEPAT</div>
         <div id="adu-winner" class="adu-winner"></div>
-        <p class="muted">MAIN: tim tercepat langsung bermain. LEMPAR: giliran pindah ke tim lawan.</p>
-        <div class="btn-row center">
-          <button id="btn-main" class="btn btn-green btn-big" type="button">MAIN</button>
-          <button id="btn-lempar" class="btn btn-blue btn-big" type="button">LEMPAR</button>
+        <p id="answerer-text" class="muted"></p>
+        <div class="input-row">
+          <input id="rebutan-input" type="text" placeholder="Ketik salah satu jawaban survei" autocomplete="off">
+          <button id="rebutan-submit" class="btn btn-green btn-big" type="button">KIRIM JAWABAN</button>
         </div>
       </div>
     </div>
@@ -206,6 +206,17 @@
       </div>
     </div>
   </div>
+
+  <div id="modal-choice" class="modal" role="dialog" aria-modal="true" aria-labelledby="choice-title">
+  <div class="modal-card">
+    <h2 id="choice-title" class="modal-title">JAWABAN BENAR!</h2>
+    <p id="choice-text" class="win-total"></p>
+    <div class="modal-foot btn-row center">
+      <button id="btn-main" class="btn btn-green btn-big" type="button">MAIN</button>
+      <button id="btn-lempar" class="btn btn-blue btn-big" type="button">LEMPAR</button>
+    </div>
+  </div>
+</div>
 
   <!-- Lapisan efek -->
   <div id="x-overlay" class="x-overlay" aria-hidden="true"></div>

@@ -1,6 +1,6 @@
 /* =========================================================
    FAMILY 100 | script.js
-   Logika permainan, bank soal, dan fungsi suara
+   Logika permainan, bank soal, babak rebutan, dan suara
    ========================================================= */
 (function () {
   'use strict';
@@ -20,133 +20,111 @@
   /* ---------- BANK SOAL ----------
      Setiap ronde: pool jawaban (t = teks, k = kata kunci tersembunyi)
      dan tiga soal kandidat (pick = urutan indeks pool, dari poin terbesar).
+     Jumlah pick harus sama dengan jumlah survei pada ROUND_POINTS.
      Kata kunci tidak pernah ditampilkan di layar. */
-const GROUPS = [
-  /* RONDE 1 : perjuangan mempertahankan kemerdekaan 1945-1946 */
-  {
-    pool: [
-      { t: 'Pertempuran Surabaya 10 November 1945', k: ['pertempuran surabaya', 'surabaya', '10 november 1945', '10 november'] },
-      { t: 'Bandung Lautan Api 24 Maret 1946', k: ['bandung lautan api', 'lautan api', 'bandung', '24 maret 1946'] },
-      { t: 'Pertempuran Ambarawa', k: ['pertempuran ambarawa', 'ambarawa'] },
-      { t: 'Pertempuran Lima Hari di Semarang', k: ['lima hari semarang', 'pertempuran lima hari', 'lima hari'] },
-      { t: 'Pertempuran Medan Area', k: ['pertempuran medan area', 'medan area'] },
-      { t: 'Puputan Margarana 20 November 1946', k: ['puputan margarana', 'margarana', 'puputan bali'] },
-      { t: 'Bung Tomo membakar semangat rakyat Surabaya', k: ['bung tomo surabaya', 'bung tomo', 'sutomo'] },
-      { t: 'Kedatangan Sekutu dan NICA yang memicu perlawanan', k: ['sekutu', 'nica', 'kedatangan sekutu'] },
-      { t: 'Proklamasi Kemerdekaan 17 Agustus 1945', k: ['proklamasi kemerdekaan', 'proklamasi', '17 agustus 1945'] }
-    ],
-    candidates: [
-      { id: 'R1-A', text: 'Sebutkan peristiwa dan tokoh penting perjuangan mempertahankan kemerdekaan tahun 1945 sampai 1946.', pick: [0, 1, 2, 3, 4, 5, 7, 6] },
-      { id: 'R1-B', text: 'Sebutkan tokoh dan pertempuran melawan Sekutu dan NICA pada tahun 1945 sampai 1946.', pick: [6, 7, 0, 3, 2, 4, 1, 5] },
-      { id: 'R1-C', text: 'Sebutkan peristiwa awal perjuangan setelah Proklamasi Kemerdekaan.', pick: [8, 7, 0, 6, 3, 2, 1, 4] }
-    ]
-  },
+  const GROUPS = [
+    /* RONDE 1 : perjuangan mempertahankan kemerdekaan 1945-1946 */
+    {
+      pool: [
+        { t: 'Pertempuran Surabaya 10 November 1945', k: ['pertempuran surabaya', 'surabaya', '10 november 1945', '10 november'] },
+        { t: 'Bandung Lautan Api 24 Maret 1946', k: ['bandung lautan api', 'lautan api', 'bandung', '24 maret 1946'] },
+        { t: 'Pertempuran Ambarawa', k: ['pertempuran ambarawa', 'ambarawa'] },
+        { t: 'Pertempuran Lima Hari di Semarang', k: ['lima hari semarang', 'pertempuran lima hari', 'lima hari'] },
+        { t: 'Pertempuran Medan Area', k: ['pertempuran medan area', 'medan area'] },
+        { t: 'Puputan Margarana 20 November 1946', k: ['puputan margarana', 'margarana', 'puputan bali'] },
+        { t: 'Bung Tomo membakar semangat rakyat Surabaya', k: ['bung tomo surabaya', 'bung tomo', 'sutomo'] },
+        { t: 'Kedatangan Sekutu dan NICA yang memicu perlawanan', k: ['sekutu', 'nica', 'kedatangan sekutu'] },
+        { t: 'Proklamasi Kemerdekaan 17 Agustus 1945', k: ['proklamasi kemerdekaan', 'proklamasi', '17 agustus 1945'] }
+      ],
+      candidates: [
+        { id: 'R1-A', text: 'Sebutkan peristiwa dan tokoh penting perjuangan mempertahankan kemerdekaan tahun 1945 sampai 1946.', pick: [0, 1, 2, 3, 4, 5, 7, 6] },
+        { id: 'R1-B', text: 'Sebutkan tokoh dan pertempuran melawan Sekutu dan NICA pada tahun 1945 sampai 1946.', pick: [6, 7, 0, 3, 2, 4, 1, 5] },
+        { id: 'R1-C', text: 'Sebutkan peristiwa awal perjuangan setelah Proklamasi Kemerdekaan.', pick: [8, 7, 0, 6, 3, 2, 1, 4] }
+      ]
+    },
 
-  /* RONDE 2 : agresi dan perundingan Indonesia-Belanda 1946-1949 */
-  {
-    pool: [
-      { t: 'Perjanjian Linggarjati 1946-1947', k: ['perjanjian linggarjati', 'linggarjati', 'linggajati'] },
-      { t: 'Agresi Militer Belanda I 1947', k: ['agresi militer belanda i', 'agresi militer belanda 1', 'agresi belanda i', 'agresi belanda 1', 'agresi militer 1', 'agresi 1', 'agresi i'] },
-      { t: 'Perjanjian Renville 1948', k: ['perjanjian renville', 'renville'] },
-      { t: 'Agresi Militer Belanda II 1948', k: ['agresi militer belanda ii', 'agresi militer belanda 2', 'agresi belanda ii', 'agresi belanda 2', 'agresi militer 2', 'agresi 2', 'agresi ii'] },
-      { t: 'Serangan Umum 1 Maret 1949', k: ['serangan umum 1 maret', 'serangan umum 1949', 'serangan umum'] },
-      { t: 'Perjanjian Roem-Royen 1949', k: ['roem van royen', 'roem royen', 'roemroyen', 'roem'] },
-      { t: 'Konferensi Meja Bundar 1949', k: ['konferensi meja bundar', 'meja bundar', 'kmb'] },
-      { t: 'Gerilya Jenderal Sudirman', k: ['gerilya sudirman', 'jenderal sudirman', 'sudirman'] }
-    ],
-    candidates: [
-      { id: 'R2-A', text: 'Sebutkan peristiwa penting perjuangan dan perundingan Indonesia dan Belanda tahun 1946 sampai 1949.', pick: [0, 2, 5, 6, 4, 7, 1, 3] },
-      { id: 'R2-B', text: 'Sebutkan peristiwa penting masa revolusi kemerdekaan tahun 1946 sampai 1949.', pick: [3, 1, 4, 7, 2, 0, 5, 6] },
-      { id: 'R2-C', text: 'Sebutkan peristiwa penting antara Indonesia dan Belanda pada tahun 1946 sampai 1949.', pick: [1, 3, 2, 0, 4, 5, 6, 7] }
-    ]
-  },
+    /* RONDE 2 : agresi dan perundingan Indonesia-Belanda 1946-1949 */
+    {
+      pool: [
+        { t: 'Perjanjian Linggarjati 1946-1947', k: ['perjanjian linggarjati', 'linggarjati', 'linggajati'] },
+        { t: 'Agresi Militer Belanda I 1947', k: ['agresi militer belanda i', 'agresi militer belanda 1', 'agresi belanda i', 'agresi belanda 1', 'agresi militer 1', 'agresi 1', 'agresi i'] },
+        { t: 'Perjanjian Renville 1948', k: ['perjanjian renville', 'renville'] },
+        { t: 'Agresi Militer Belanda II 1948', k: ['agresi militer belanda ii', 'agresi militer belanda 2', 'agresi belanda ii', 'agresi belanda 2', 'agresi militer 2', 'agresi 2', 'agresi ii'] },
+        { t: 'Serangan Umum 1 Maret 1949', k: ['serangan umum 1 maret', 'serangan umum 1949', 'serangan umum'] },
+        { t: 'Perjanjian Roem-Royen 1949', k: ['roem van royen', 'roem royen', 'roemroyen', 'roem'] },
+        { t: 'Konferensi Meja Bundar 1949', k: ['konferensi meja bundar', 'meja bundar', 'kmb'] },
+        { t: 'Gerilya Jenderal Sudirman', k: ['gerilya sudirman', 'jenderal sudirman', 'sudirman'] }
+      ],
+      candidates: [
+        { id: 'R2-A', text: 'Sebutkan peristiwa penting perjuangan dan perundingan Indonesia dan Belanda tahun 1946 sampai 1949.', pick: [0, 2, 5, 6, 4, 7, 1, 3] },
+        { id: 'R2-B', text: 'Sebutkan peristiwa penting masa revolusi kemerdekaan tahun 1946 sampai 1949.', pick: [3, 1, 4, 7, 2, 0, 5, 6] },
+        { id: 'R2-C', text: 'Sebutkan peristiwa penting antara Indonesia dan Belanda pada tahun 1946 sampai 1949.', pick: [1, 3, 2, 0, 4, 5, 6, 7] }
+      ]
+    },
 
-  /* RONDE 3 : awal negara kesatuan dan Demokrasi Liberal 1950-1955 */
-  {
-    pool: [
-      { t: 'Pembubaran RIS dan terbentuknya NKRI 17 Agustus 1950', k: ['pembubaran ris', 'negara kesatuan', 'nkri'] },
-      { t: 'UUDS 1950', k: ['undang undang dasar sementara', 'uuds 1950', 'uuds'] },
-      { t: 'Kabinet Natsir', k: ['kabinet natsir', 'natsir'] },
-      { t: 'Kabinet Sukiman', k: ['kabinet sukiman', 'sukiman'] },
-      { t: 'Kabinet Wilopo', k: ['kabinet wilopo', 'wilopo'] },
-      { t: 'Kabinet Ali Sastroamidjojo I', k: ['kabinet ali sastroamidjojo', 'kabinet ali sastroamijoyo', 'ali sastroamidjojo', 'ali sastroamijoyo', 'sastroamidjojo', 'sastroamijoyo', 'kabinet ali 1', 'kabinet ali i'] },
-      { t: 'Gerakan Benteng', k: ['gerakan benteng', 'benteng'] },
-      { t: 'Nasionalisasi De Javasche Bank', k: ['nasionalisasi de javasche bank', 'de javasche bank', 'nasionalisasi bank'] },
-      { t: 'Sistem Ekonomi Ali Baba', k: ['sistem ekonomi ali baba', 'ekonomi ali baba', 'ali baba'] },
-      { t: 'Pemberontakan APRA', k: ['pemberontakan apra', 'apra'] },
-      { t: 'Pemberontakan Andi Azis', k: ['pemberontakan andi azis', 'pemberontakan andi aziz', 'andi azis', 'andi aziz'] },
-      { t: 'Pemberontakan RMS', k: ['republik maluku selatan', 'rms'] },
-      { t: 'Pemberontakan DI/TII', k: ['darul islam', 'di tii', 'ditii'] },
-      { t: 'Peristiwa 17 Oktober 1952', k: ['peristiwa 17 oktober', '17 oktober 1952', '17 oktober'] }
-    ],
-    candidates: [
-      { id: 'R3-A', text: 'Sebutkan kabinet dan kebijakan pemerintah pada masa Demokrasi Liberal awal.', pick: [2, 3, 4, 5, 6, 8, 7] },
-      { id: 'R3-B', text: 'Sebutkan pemberontakan dan peristiwa politik dalam negeri pada tahun 1950 sampai 1952.', pick: [9, 10, 11, 12, 13, 0, 1] },
-      { id: 'R3-C', text: 'Sebutkan kebijakan ekonomi, kabinet, dan tonggak awal negara kesatuan.', pick: [0, 1, 6, 7, 8, 2, 4] }
-    ]
-  },
+    /* RONDE 3 : awal negara kesatuan dan Demokrasi Liberal 1950-1955 */
+    {
+      pool: [
+        { t: 'Pembubaran RIS dan terbentuknya NKRI 17 Agustus 1950', k: ['pembubaran ris', 'negara kesatuan', 'nkri'] },
+        { t: 'UUDS 1950', k: ['undang undang dasar sementara', 'uuds 1950', 'uuds'] },
+        { t: 'Kabinet Natsir', k: ['kabinet natsir', 'natsir'] },
+        { t: 'Kabinet Sukiman', k: ['kabinet sukiman', 'sukiman'] },
+        { t: 'Kabinet Wilopo', k: ['kabinet wilopo', 'wilopo'] },
+        { t: 'Kabinet Ali Sastroamidjojo I', k: ['kabinet ali sastroamidjojo', 'kabinet ali sastroamijoyo', 'ali sastroamidjojo', 'ali sastroamijoyo', 'sastroamidjojo', 'sastroamijoyo', 'kabinet ali 1', 'kabinet ali i'] },
+        { t: 'Gerakan Benteng', k: ['gerakan benteng', 'benteng'] },
+        { t: 'Nasionalisasi De Javasche Bank', k: ['nasionalisasi de javasche bank', 'de javasche bank', 'nasionalisasi bank'] },
+        { t: 'Sistem Ekonomi Ali Baba', k: ['sistem ekonomi ali baba', 'ekonomi ali baba', 'ali baba'] },
+        { t: 'Pemberontakan APRA', k: ['pemberontakan apra', 'apra'] },
+        { t: 'Pemberontakan Andi Azis', k: ['pemberontakan andi azis', 'pemberontakan andi aziz', 'andi azis', 'andi aziz'] },
+        { t: 'Pemberontakan RMS', k: ['republik maluku selatan', 'rms'] },
+        { t: 'Pemberontakan DI/TII', k: ['darul islam', 'di tii', 'ditii'] },
+        { t: 'Peristiwa 17 Oktober 1952', k: ['peristiwa 17 oktober', '17 oktober 1952', '17 oktober'] }
+      ],
+      candidates: [
+        { id: 'R3-A', text: 'Sebutkan kabinet dan kebijakan pemerintah pada masa Demokrasi Liberal awal.', pick: [2, 3, 4, 5, 6, 8, 7] },
+        { id: 'R3-B', text: 'Sebutkan pemberontakan dan peristiwa politik dalam negeri pada tahun 1950 sampai 1952.', pick: [9, 10, 11, 12, 13, 0, 1] },
+        { id: 'R3-C', text: 'Sebutkan kebijakan ekonomi, kabinet, dan tonggak awal negara kesatuan.', pick: [0, 1, 6, 7, 8, 2, 4] }
+      ]
+    },
 
-  /* RONDE 4 : pemilu dan dinamika politik Demokrasi Liberal 1955-1958 */
-  {
-    pool: [
-      { t: 'Pemilu DPR 29 September 1955', k: ['pemilu dpr', 'pemilu 1955', '29 september 1955'] },
-      { t: 'Pemilihan Konstituante 15 Desember 1955', k: ['pemilihan konstituante', 'konstituante', '15 desember 1955'] },
-      { t: 'PNI (Partai Nasional Indonesia)', k: ['partai nasional indonesia', 'pni'] },
-      { t: 'Masyumi', k: ['partai masyumi', 'masyumi'] },
-      { t: 'NU (Nahdlatul Ulama)', k: ['nahdlatul ulama', 'nahdhatul ulama', 'nu'] },
-      { t: 'PKI (Partai Komunis Indonesia)', k: ['partai komunis indonesia', 'pki'] },
-      { t: 'Konferensi Asia Afrika 1955 dengan hasil Dasasila Bandung', k: ['dasasila bandung', 'konferensi asia afrika', 'asia afrika', 'kaa'] },
-      { t: 'Deklarasi Djuanda 13 Desember 1957', k: ['deklarasi djuanda', 'deklarasi juanda', 'djuanda', 'juanda', 'wawasan nusantara'] },
-      { t: 'Konsepsi Presiden 1957', k: ['konsepsi presiden', 'konsepsi'] },
-      { t: 'Pemberontakan PRRI Permesta 1958', k: ['prri permesta', 'prri', 'permesta'] }
-    ],
-    candidates: [
-      { id: 'R4-A', text: 'Sebutkan partai besar dan pemilu yang berlangsung pada tahun 1955.', pick: [2, 3, 4, 5, 0, 1] },
-      { id: 'R4-B', text: 'Sebutkan peristiwa politik penting pada tahun 1955 sampai 1958.', pick: [0, 6, 7, 8, 9, 1] },
-      { id: 'R4-C', text: 'Sebutkan partai dan peristiwa politik pada masa Demokrasi Liberal 1955 sampai 1958.', pick: [3, 5, 6, 7, 9, 4] }
-    ]
-  },
+    /* RONDE 4 : pemilu dan dinamika politik Demokrasi Liberal 1955-1958 */
+    {
+      pool: [
+        { t: 'Pemilu DPR 29 September 1955', k: ['pemilu dpr', 'pemilu 1955', '29 september 1955'] },
+        { t: 'Pemilihan Konstituante 15 Desember 1955', k: ['pemilihan konstituante', 'konstituante', '15 desember 1955'] },
+        { t: 'PNI (Partai Nasional Indonesia)', k: ['partai nasional indonesia', 'pni'] },
+        { t: 'Masyumi', k: ['partai masyumi', 'masyumi'] },
+        { t: 'NU (Nahdlatul Ulama)', k: ['nahdlatul ulama', 'nahdhatul ulama', 'nu'] },
+        { t: 'PKI (Partai Komunis Indonesia)', k: ['partai komunis indonesia', 'pki'] },
+        { t: 'Konferensi Asia Afrika 1955 dengan hasil Dasasila Bandung', k: ['dasasila bandung', 'konferensi asia afrika', 'asia afrika', 'kaa'] },
+        { t: 'Deklarasi Djuanda 13 Desember 1957', k: ['deklarasi djuanda', 'deklarasi juanda', 'djuanda', 'juanda', 'wawasan nusantara'] },
+        { t: 'Konsepsi Presiden 1957', k: ['konsepsi presiden', 'konsepsi'] },
+        { t: 'Pemberontakan PRRI Permesta 1958', k: ['prri permesta', 'prri', 'permesta'] }
+      ],
+      candidates: [
+        { id: 'R4-A', text: 'Sebutkan partai besar dan pemilu yang berlangsung pada tahun 1955.', pick: [2, 3, 4, 5, 0, 1] },
+        { id: 'R4-B', text: 'Sebutkan peristiwa politik penting pada tahun 1955 sampai 1958.', pick: [0, 6, 7, 8, 9, 1] },
+        { id: 'R4-C', text: 'Sebutkan partai dan peristiwa politik pada masa Demokrasi Liberal 1955 sampai 1958.', pick: [3, 5, 6, 7, 9, 4] }
+      ]
+    },
 
-  /* RONDE 5 : akhir Orde Lama 1959-1966 */
-  {
-    pool: [
-      { t: 'Dekrit Presiden 5 Juli 1959', k: ['dekrit presiden', 'dekrit', '5 juli 1959'] },
-      { t: 'Demokrasi Terpimpin', k: ['demokrasi terpimpin', 'terpimpin'] },
-      { t: 'Trikora 1961', k: ['tri komando rakyat', 'trikora'] },
-      { t: 'Konfrontasi Malaysia dan Dwikora 1963-1966', k: ['konfrontasi malaysia', 'ganyang malaysia', 'konfrontasi', 'dwikora', 'dwi komando rakyat'] },
-      { t: 'Peristiwa G30S 1965', k: ['30 september 1965', 'g30s pki', 'g30s', 'g 30 s pki', 'g 30 s', 'gestapu'] },
-      { t: 'Supersemar 11 Maret 1966', k: ['surat perintah 11 maret', '11 maret 1966', 'supersemar'] }
-    ],
-    candidates: [
-      { id: 'R5-A', text: 'Sebutkan kebijakan dan peristiwa penting masa Orde Lama tahun 1959 sampai 1966.', pick: [0, 1, 2, 3, 5] },
-      { id: 'R5-B', text: 'Sebutkan peristiwa dan kebijakan yang mewarnai masa Demokrasi Terpimpin.', pick: [4, 5, 3, 1, 0] },
-      { id: 'R5-C', text: 'Sebutkan dekrit, surat perintah, atau komando yang dikeluarkan Presiden Soekarno.', pick: [0, 5, 2, 3] }
-    ]
-  }
-];
-
-/* ---------- Fungsi pencocokan jawaban ---------- */
-
-function norm(s) {
-  return String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-}
-
-function findMatches(input, pool) {
-  let text = ' ' + norm(input) + ' ';
-  const entries = [];
-  pool.forEach((item, i) => item.k.forEach(k => entries.push({ i, k: norm(k) })));
-  entries.sort((a, b) => b.k.length - a.k.length);
-
-  const hit = new Set();
-  for (const { i, k } of entries) {
-    const needle = ' ' + k + ' ';
-    if (text.includes(needle)) {
-      hit.add(i);
-      text = text.split(needle).join(' ');
+    /* RONDE 5 : akhir Orde Lama 1959-1966 */
+    {
+      pool: [
+        { t: 'Dekrit Presiden 5 Juli 1959', k: ['dekrit presiden', 'dekrit', '5 juli 1959'] },
+        { t: 'Demokrasi Terpimpin', k: ['demokrasi terpimpin', 'terpimpin'] },
+        { t: 'Trikora 1961', k: ['tri komando rakyat', 'trikora'] },
+        { t: 'Konfrontasi Malaysia dan Dwikora 1963-1966', k: ['konfrontasi malaysia', 'ganyang malaysia', 'konfrontasi', 'dwikora', 'dwi komando rakyat'] },
+        { t: 'Peristiwa G30S 1965', k: ['30 september 1965', 'g30s pki', 'g30s', 'g 30 s pki', 'g 30 s', 'gestapu'] },
+        { t: 'Supersemar 11 Maret 1966', k: ['surat perintah 11 maret', '11 maret 1966', 'supersemar'] }
+      ],
+      candidates: [
+        { id: 'R5-A', text: 'Sebutkan kebijakan dan peristiwa penting masa Orde Lama tahun 1959 sampai 1966.', pick: [0, 1, 2, 3, 5] },
+        { id: 'R5-B', text: 'Sebutkan peristiwa dan kebijakan yang mewarnai masa Demokrasi Terpimpin.', pick: [4, 5, 3, 1, 0] },
+        { id: 'R5-C', text: 'Sebutkan dekrit, surat perintah, atau kebijakan yang dikeluarkan Presiden Soekarno.', pick: [0, 5, 1, 2, 3] }
+      ]
     }
-  }
-  return [...hit];
-}
+  ];
 
   /* ---------- STATE ---------- */
   const state = {
@@ -223,7 +201,6 @@ function findMatches(input, pool) {
     notes.forEach((f, i) => playTone(f, i * 0.375, 0.375, 'triangle', 0.9));
   }
 
-  /* Mute / unmute */
   function renderMute() {
     const b = $('btn-mute');
     b.textContent = muted ? '🔇' : '🔊';
@@ -294,8 +271,14 @@ function findMatches(input, pool) {
   }
 
   /* =========================================================
-     UTILITAS PENCOCOKAN JAWABAN
+     PENCOCOKAN JAWABAN
      ========================================================= */
+
+  /* Huruf kecil, tanda baca menjadi spasi, spasi berlebih dihapus */
+  function norm(s) {
+    return String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+
   function levenshtein(a, b) {
     const m = a.length;
     const n = b.length;
@@ -304,33 +287,35 @@ function findMatches(input, pool) {
     let prev = [];
     for (let j = 0; j <= n; j++) prev[j] = j;
     for (let i = 1; i <= m; i++) {
-      const cur = [i];
+      const row = [i];
       for (let j = 1; j <= n; j++) {
         const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+        row[j] = Math.min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + cost);
       }
-      prev = cur;
+      prev = row;
     }
     return prev[n];
   }
 
-  /* Mengembalikan indeks jawaban yang cocok (belum terbuka), atau -1. */
-  function matchAnswer(rs, norm) {
-    let fuzzy = -1;
+  /* Mengembalikan indeks jawaban yang cocok (belum terbuka), atau -1.
+     Pencocokan persis lebih diutamakan. Pencocokan selisih 1-2 huruf hanya
+     dipakai jika tepat satu jawaban yang cocok, agar tidak salah membuka. */
+  function matchAnswer(rs, guess) {
+    const fuzzy = new Set();
     for (let i = 0; i < rs.answers.length; i++) {
       if (rs.opened[i]) continue;
       const keys = rs.answers[i].k;
       for (let j = 0; j < keys.length; j++) {
         const k = keys[j];
-        if (norm === k) return i;
-        if (k.length > 4 && fuzzy < 0 && levenshtein(norm, k) <= 2) fuzzy = i;
+        if (guess === k) return i;
+        if (k.length > 4 && levenshtein(guess, k) <= 2) fuzzy.add(i);
       }
     }
-    return fuzzy;
+    return fuzzy.size === 1 ? [...fuzzy][0] : -1;
   }
 
   /* =========================================================
-     PEMBUATAN RONDE
+     PEMBUATAN, MULAI, DAN AKHIR RONDE
      ========================================================= */
   function makeRound(r, q) {
     const pool = GROUPS[r].pool;
@@ -338,7 +323,7 @@ function findMatches(input, pool) {
       q: q,
       answers: q.pick.map((pi, idx) => ({
         t: pool[pi].t,
-        k: pool[pi].k,
+        k: pool[pi].k.map(norm),
         pts: ROUND_POINTS[r][idx]
       })),
       opened: q.pick.map(() => false),
@@ -350,14 +335,17 @@ function findMatches(input, pool) {
       phase: 'rebutan',
       presses: [],
       fastest: -1,
+      answerer: -1,
+      wrong: 0,
+      awaitingChoice: false,
+      choiceTeam: -1,
       done: false,
       winner: -1
     };
   }
 
   function startRound(r) {
-    const group = GROUPS[r];
-    const q = group.candidates.find((c) => state.usedIds.indexOf(c.id) < 0);
+    const q = GROUPS[r].candidates.find((c) => state.usedIds.indexOf(c.id) < 0);
     if (!q) return false;
     state.usedIds.push(q.id);
     state.rounds[r] = makeRound(r, q);
@@ -384,7 +372,9 @@ function findMatches(input, pool) {
     state.locked = false;
     closeModal('modal-settings');
     closeModal('modal-win');
+    closeModal('modal-choice');
     $('fx-layer').innerHTML = '';
+    $('rebutan-input').value = '';
     setMsg('');
     startRound(0);
     renderAll();
@@ -397,11 +387,14 @@ function findMatches(input, pool) {
     rs.done = true;
     rs.phase = 'selesai';
     rs.steal = -1;
+    rs.awaitingChoice = false;
+    rs.choiceTeam = -1;
     rs.winner = winner;
     rs.gained = rs.pool;
     state.scores[winner] += rs.pool;
     clearTimeout(state.lockTimer);
     state.locked = false;
+    closeModal('modal-choice');
     setMsg(rs.gained > 0
       ? 'Ronde selesai. ' + rs.gained + ' poin untuk ' + TEAM_NAMES[winner] + '.'
       : 'Ronde selesai.');
@@ -434,8 +427,10 @@ function findMatches(input, pool) {
   }
 
   /* =========================================================
-     AKSI BABAK REBUTAN
+     BABAK REBUTAN
      ========================================================= */
+
+  /* Tekan tombol tim. Setelah kedua tim menekan, adu cepat dimulai. */
   function onBuzz(t) {
     const rs = cur();
     if (!rs || rs.done || isReadOnly() || rs.phase !== 'rebutan') return;
@@ -444,19 +439,83 @@ function findMatches(input, pool) {
     if (rs.presses.length === 2) {
       rs.phase = 'pilih';
       rs.fastest = rs.presses[0];
+      rs.answerer = rs.fastest;
+      rs.owner = rs.fastest;
+      rs.wrong = 0;
+      setMsg(TEAM_NAMES[rs.fastest] + ' tercepat. Silakan menjawab dari salah satu survei.');
     }
     renderAll();
   }
 
+  /* Jawaban dari survei pada babak adu cepat.
+     Benar: bar terbuka dan pop-up MAIN/LEMPAR muncul untuk tim yang menjawab.
+     Salah: X muncul dan giliran menjawab pindah ke tim lawan.
+     Jika kedua tim salah: tim tercepat langsung bermain di papan jawaban. */
+  function onRebutanAnswer() {
+    const rs = cur();
+    if (!rs || rs.done || isReadOnly() || rs.phase !== 'pilih' || rs.awaitingChoice) return;
+    const input = $('rebutan-input');
+    const guess = norm(input.value);
+    if (!guess) return;
+
+    const team = rs.answerer;
+    const idx = matchAnswer(rs, guess);
+
+    if (idx < 0) {
+      rs.wrong += 1;
+      input.value = '';
+      queueFx(() => {
+        playWrongSound();
+        showXOverlay();
+      }, 900);
+      if (rs.wrong >= 2) {
+        rs.owner = rs.fastest;
+        rs.phase = 'main';
+        setMsg('Tidak ada tim yang menjawab benar. ' + TEAM_NAMES[rs.owner] + ' bermain di papan jawaban.', 'warn');
+        renderAll();
+        focusInput();
+      } else {
+        rs.answerer = 1 - rs.answerer;
+        setMsg('Belum cocok. Giliran menjawab: ' + TEAM_NAMES[rs.answerer] + '.', 'warn');
+        renderAll();
+        $('rebutan-input').focus();
+      }
+      return;
+    }
+
+    input.value = '';
+    rs.opened[idx] = true;
+    const pts = rs.answers[idx].pts;
+    rs.pool += pts;
+    rs.owner = team;
+    rs.awaitingChoice = true;
+    rs.choiceTeam = team;
+    queueFx(() => {
+      playCorrectSound();
+      floatPoints(team, pts);
+    }, 1000);
+    setMsg('');
+    renderAll();
+  }
+
+  /* Pop-up MAIN atau LEMPAR setelah jawaban benar */
   function onChoose(main) {
     const rs = cur();
-    if (!rs || rs.phase !== 'pilih' || isReadOnly()) return;
-    rs.owner = main ? rs.fastest : 1 - rs.fastest;
+    if (!rs || !rs.awaitingChoice || isReadOnly()) return;
+    const team = rs.choiceTeam;
+    rs.owner = main ? team : 1 - team;
     rs.phase = 'main';
+    rs.awaitingChoice = false;
+    rs.choiceTeam = -1;
     state.selected = -1;
+    closeModal('modal-choice');
     setMsg(TEAM_NAMES[rs.owner] + (main
       ? ' langsung bermain di papan jawaban.'
       : ' mendapat giliran bermain setelah lemparan.'));
+    if (rs.opened.every(Boolean)) {
+      finishRound(state.furthest, rs.owner);
+      return;
+    }
     renderAll();
     focusInput();
   }
@@ -466,13 +525,32 @@ function findMatches(input, pool) {
     if (!rs || rs.done || isReadOnly()) return;
     rs.presses = [];
     rs.fastest = -1;
+    rs.answerer = -1;
+    rs.wrong = 0;
+    rs.awaitingChoice = false;
+    rs.choiceTeam = -1;
     rs.phase = 'rebutan';
+    closeModal('modal-choice');
+    $('rebutan-input').value = '';
     setMsg('Rebutan diulang.');
     renderAll();
   }
 
+  function onBackRebutan() {
+    const rs = cur();
+    if (!rs || rs.done || isReadOnly() || rs.phase !== 'main' || rs.steal >= 0) return;
+    rs.phase = 'rebutan';
+    rs.presses = [];
+    rs.fastest = -1;
+    rs.answerer = -1;
+    rs.wrong = 0;
+    state.selected = -1;
+    setMsg('Kembali ke babak rebutan.');
+    renderAll();
+  }
+
   /* =========================================================
-     AKSI PAPAN JAWABAN
+     PAPAN JAWABAN
      ========================================================= */
   function activeTeam(rs) {
     return rs.steal >= 0 ? rs.steal : rs.owner;
@@ -510,10 +588,10 @@ function findMatches(input, pool) {
   function onSubmit() {
     if (!canAnswer()) return;
     const input = $('answer-input');
-    const norm = input.value.trim().toLowerCase();
-    if (!norm) return;
+    const guess = norm(input.value);
+    if (!guess) return;
     const rs = cur();
-    const idx = matchAnswer(rs, norm);
+    const idx = matchAnswer(rs, guess);
     if (idx < 0) {
       setMsg('Belum cocok coba cek manual', 'warn');
       focusInput();
@@ -591,17 +669,6 @@ function findMatches(input, pool) {
     renderAll();
   }
 
-  function onBackRebutan() {
-    const rs = cur();
-    if (!rs || rs.done || isReadOnly() || rs.phase !== 'main' || rs.steal >= 0) return;
-    rs.phase = 'rebutan';
-    rs.presses = [];
-    rs.fastest = -1;
-    state.selected = -1;
-    setMsg('Kembali ke babak rebutan.');
-    renderAll();
-  }
-
   function onTransfer() {
     const rs = cur();
     if (!rs || rs.done || isReadOnly()) return;
@@ -626,7 +693,7 @@ function findMatches(input, pool) {
   }
 
   /* =========================================================
-     AKSI TOMBOL BERISIKO (selalu lewat konfirmasi)
+     TOMBOL BERISIKO (selalu lewat konfirmasi)
      ========================================================= */
   function confirmAct(message, fn) {
     if (window.confirm(message)) fn();
@@ -819,7 +886,10 @@ function findMatches(input, pool) {
     const ro = isReadOnly();
     const isLast = r === TOTAL_ROUNDS - 1;
 
-    /* Judul & navigasi ronde */
+    /* Pop-up pilihan MAIN/LEMPAR hanya boleh tampil di ronde aktif */
+    if (ro || (rs && rs.done)) closeModal('modal-choice');
+
+    /* Judul dan navigasi ronde */
     $('round-title').textContent = 'RONDE ' + (r + 1);
     $('btn-prev').disabled = r <= 0;
     const lastDone = !!rs && state.furthest === TOTAL_ROUNDS - 1 && rs.done && r === state.furthest;
@@ -856,11 +926,22 @@ function findMatches(input, pool) {
         btn.disabled = pos >= 0 || rs.phase !== 'rebutan' || ro || rs.done;
         $('buzz-order-' + t).textContent = pos >= 0 ? 'TERCEPAT URUTAN ' + (pos + 1) : '';
       }
+
       const showAdu = rs.phase === 'pilih';
       $('adu-result').classList.toggle('hidden', !showAdu);
-      if (showAdu) $('adu-winner').textContent = TEAM_NAMES[rs.fastest] + ' TERCEPAT';
-      $('btn-main').disabled = ro || !showAdu;
-      $('btn-lempar').disabled = ro || !showAdu;
+      if (showAdu) {
+        $('adu-winner').textContent = TEAM_NAMES[rs.fastest] + ' TERCEPAT';
+        $('answerer-text').textContent = 'Giliran menjawab: ' + TEAM_NAMES[rs.answerer] + ' (ketik salah satu jawaban survei)';
+        const off = ro || rs.done || rs.awaitingChoice;
+        $('rebutan-input').disabled = off;
+        $('rebutan-submit').disabled = off;
+      }
+
+      if (rs.awaitingChoice && !ro && !rs.done) {
+        $('choice-text').textContent = 'Jawaban benar dari ' + TEAM_NAMES[rs.choiceTeam] + '. Pilih MAIN atau LEMPAR.';
+        if (!isOpen('modal-choice')) openModal('modal-choice');
+      }
+
       $('btn-ulang').disabled = ro || rs.done;
     }
 
@@ -941,9 +1022,18 @@ function findMatches(input, pool) {
     document.querySelectorAll('.btn-buzz').forEach((b) => {
       b.addEventListener('click', () => onBuzz(Number(b.dataset.team)));
     });
+    $('btn-ulang').addEventListener('click', onUlangRebutan);
+
+    $('rebutan-submit').addEventListener('click', onRebutanAnswer);
+    $('rebutan-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        onRebutanAnswer();
+      }
+    });
+
     $('btn-main').addEventListener('click', () => onChoose(true));
     $('btn-lempar').addEventListener('click', () => onChoose(false));
-    $('btn-ulang').addEventListener('click', onUlangRebutan);
 
     $('btn-submit').addEventListener('click', onSubmit);
     $('answer-input').addEventListener('keydown', (e) => {
@@ -988,7 +1078,7 @@ function findMatches(input, pool) {
       if (e.key === 'Escape') closeModal('modal-settings');
     });
 
-    /* AudioContext hanya dibuat/dilanjutkan setelah interaksi pertama pengguna */
+    /* AudioContext hanya dibuat atau dilanjutkan setelah interaksi pertama pengguna */
     document.addEventListener('pointerdown', () => getAudio(), { passive: true });
     document.addEventListener('keydown', () => getAudio());
   }
