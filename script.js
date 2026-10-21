@@ -17,10 +17,10 @@
   const TOTAL_ROUNDS = ROUND_POINTS.length;
   const MUTE_KEY = 'family100-muted';
 
-  /* ---------- BANK SOAL ----------
+/* ---------- BANK SOAL ----------
      Setiap ronde: pool jawaban (t = teks, k = kata kunci tersembunyi)
-     dan kandidat soal (pick = urutan indeks pool, dari poin terbesar).
-     Jumlah survei per ronde diatur di ROUND_POINTS.
+     dan dua soal kandidat (pick = urutan indeks pool, dari poin terbesar).
+     Jumlah pick harus sama dengan jumlah survei pada ROUND_POINTS (8).
      Kata kunci tidak pernah ditampilkan di layar. */
   const GROUPS = [
     /* RONDE 1 : perjuangan mempertahankan kemerdekaan 1945-1946 */
