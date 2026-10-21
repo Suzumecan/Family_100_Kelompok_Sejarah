@@ -17,35 +17,44 @@
   const TOTAL_ROUNDS = ROUND_POINTS.length;
   const MUTE_KEY = 'family100-muted';
 
-  /* ---------- BANK SOAL ----------
+/* ---------- BANK SOAL ----------
      Setiap ronde: pool jawaban (t = teks, k = kata kunci tersembunyi)
-     dan tiga soal kandidat (pick = urutan indeks pool, dari poin terbesar).
-     Jumlah pick harus sama dengan jumlah survei pada ROUND_POINTS.
+     dan dua soal kandidat (pick = urutan indeks pool, dari poin terbesar).
+     Jumlah pick harus sama dengan jumlah survei pada ROUND_POINTS (8).
      Kata kunci tidak pernah ditampilkan di layar. */
   const GROUPS = [
     /* RONDE 1 : perjuangan mempertahankan kemerdekaan 1945-1946 */
     {
       pool: [
+        /* 0-8 : peristiwa */
         { t: 'Pertempuran Surabaya 10 November 1945', k: ['pertempuran surabaya', 'surabaya', '10 november 1945', '10 november'] },
         { t: 'Bandung Lautan Api 24 Maret 1946', k: ['bandung lautan api', 'lautan api', 'bandung', '24 maret 1946'] },
         { t: 'Pertempuran Ambarawa', k: ['pertempuran ambarawa', 'ambarawa'] },
         { t: 'Pertempuran Lima Hari di Semarang', k: ['lima hari semarang', 'pertempuran lima hari', 'lima hari'] },
         { t: 'Pertempuran Medan Area', k: ['pertempuran medan area', 'medan area'] },
         { t: 'Puputan Margarana 20 November 1946', k: ['puputan margarana', 'margarana', 'puputan bali'] },
-        { t: 'Bung Tomo membakar semangat rakyat Surabaya', k: ['bung tomo surabaya', 'bung tomo', 'sutomo'] },
+        { t: 'Bung Tomo', k: ['bung tomo', 'sutomo'] },
         { t: 'Kedatangan Sekutu dan NICA yang memicu perlawanan', k: ['sekutu', 'nica', 'kedatangan sekutu'] },
-        { t: 'Proklamasi Kemerdekaan 17 Agustus 1945', k: ['proklamasi kemerdekaan', 'proklamasi', '17 agustus 1945'] }
+        { t: 'Proklamasi Kemerdekaan 17 Agustus 1945', k: ['proklamasi kemerdekaan', 'proklamasi', '17 agustus 1945'] },
+        /* 9-15 : tokoh */
+        { t: 'Soekarno', k: ['soekarno', 'sukarno', 'bung karno'] },
+        { t: 'Mohammad Hatta', k: ['mohammad hatta', 'moh hatta', 'bung hatta', 'hatta'] },
+        { t: 'Jenderal Sudirman', k: ['jenderal sudirman', 'panglima sudirman', 'sudirman'] },
+        { t: 'I Gusti Ngurah Rai', k: ['i gusti ngurah rai', 'ngurah rai'] },
+        { t: 'Gubernur Suryo', k: ['gubernur suryo', 'raden mas tumenggung ario suryo', 'suryo'] },
+        { t: 'Sutan Sjahrir', k: ['sutan sjahrir', 'sjahrir', 'syahrir'] },
+        { t: 'Sri Sultan Hamengkubuwono IX', k: ['hamengkubuwono ix', 'hamengkubuwono', 'sri sultan'] }
       ],
       candidates: [
-        { id: 'R1-A', text: 'Sebutkan peristiwa dan tokoh penting perjuangan mempertahankan kemerdekaan tahun 1945 sampai 1946.', pick: [0, 1, 2, 3, 4, 5, 7, 6] },
-        { id: 'R1-B', text: 'Sebutkan tokoh dan pertempuran melawan Sekutu dan NICA pada tahun 1945 sampai 1946.', pick: [6, 7, 0, 3, 2, 4, 1, 5] },
-        { id: 'R1-C', text: 'Sebutkan peristiwa awal perjuangan setelah Proklamasi Kemerdekaan.', pick: [8, 7, 0, 6, 3, 2, 1, 4] }
+        { id: 'R1-A', text: 'Sebutkan peristiwa penting perjuangan mempertahankan kemerdekaan tahun 1945 sampai 1946.', pick: [0, 1, 2, 3, 4, 5, 8, 7] },
+        { id: 'R1-B', text: 'Sebutkan tokoh penting perjuangan mempertahankan kemerdekaan tahun 1945 sampai 1946.', pick: [6, 11, 12, 9, 10, 13, 15, 14] }
       ]
     },
 
     /* RONDE 2 : agresi dan perundingan Indonesia-Belanda 1946-1949 */
     {
       pool: [
+        /* 0-7 : pool lama */
         { t: 'Perjanjian Linggarjati 1946-1947', k: ['perjanjian linggarjati', 'linggarjati', 'linggajati'] },
         { t: 'Agresi Militer Belanda I 1947', k: ['agresi militer belanda i', 'agresi militer belanda 1', 'agresi belanda i', 'agresi belanda 1', 'agresi militer 1', 'agresi 1', 'agresi i'] },
         { t: 'Perjanjian Renville 1948', k: ['perjanjian renville', 'renville'] },
@@ -53,18 +62,27 @@
         { t: 'Serangan Umum 1 Maret 1949', k: ['serangan umum 1 maret', 'serangan umum 1949', 'serangan umum'] },
         { t: 'Perjanjian Roem-Royen 1949', k: ['roem van royen', 'roem royen', 'roemroyen', 'roem'] },
         { t: 'Konferensi Meja Bundar 1949', k: ['konferensi meja bundar', 'meja bundar', 'kmb'] },
-        { t: 'Gerilya Jenderal Sudirman', k: ['gerilya sudirman', 'jenderal sudirman', 'sudirman'] }
+        { t: 'Gerilya Jenderal Sudirman', k: ['gerilya sudirman', 'jenderal sudirman', 'sudirman'] },
+        /* 8-15 : tambahan */
+        { t: 'Perundingan Hoge Veluwe 1946', k: ['hoge veluwe', 'hooge veluwe', 'perundingan hoge veluwe'] },
+        { t: 'Konferensi Inter-Indonesia 1949', k: ['konferensi inter indonesia', 'inter indonesia'] },
+        { t: 'Komisi Tiga Negara (KTN)', k: ['komisi tiga negara', 'ktn'] },
+        { t: 'Peristiwa Madiun 1948', k: ['peristiwa madiun', 'pemberontakan madiun', 'madiun'] },
+        { t: 'Pemerintah Darurat Republik Indonesia (PDRI)', k: ['pemerintah darurat republik indonesia', 'pdri', 'syafruddin prawiranegara'] },
+        { t: 'Long March Divisi Siliwangi', k: ['long march siliwangi', 'long march', 'hijrah siliwangi', 'siliwangi'] },
+        { t: 'Peristiwa pesawat Dakota VT-CLA 1947', k: ['dakota vt cla', 'dakota', 'vt cla', 'pesawat dakota'] },
+        { t: 'Komisi PBB untuk Indonesia (UNCI)', k: ['unci', 'komisi pbb untuk indonesia', 'united nations commission for indonesia'] }
       ],
       candidates: [
-        { id: 'R2-A', text: 'Sebutkan peristiwa penting perjuangan dan perundingan Indonesia dan Belanda tahun 1946 sampai 1949.', pick: [0, 2, 5, 6, 4, 7, 1, 3] },
-        { id: 'R2-B', text: 'Sebutkan peristiwa penting masa revolusi kemerdekaan tahun 1946 sampai 1949.', pick: [3, 1, 4, 7, 2, 0, 5, 6] },
-        { id: 'R2-C', text: 'Sebutkan peristiwa penting antara Indonesia dan Belanda pada tahun 1946 sampai 1949.', pick: [1, 3, 2, 0, 4, 5, 6, 7] }
+        { id: 'R2-A', text: 'Sebutkan perundingan, perjanjian, atau konferensi antara Indonesia dan Belanda tahun 1946 sampai 1949.', pick: [0, 2, 5, 6, 8, 9, 10, 15] },
+        { id: 'R2-B', text: 'Sebutkan peristiwa militer dan politik penting masa revolusi tahun 1946 sampai 1949.', pick: [3, 1, 4, 7, 11, 12, 13, 14] }
       ]
     },
 
     /* RONDE 3 : awal negara kesatuan dan Demokrasi Liberal 1950-1955 */
     {
       pool: [
+        /* 0-13 : pool lama */
         { t: 'Pembubaran RIS dan terbentuknya NKRI 17 Agustus 1950', k: ['pembubaran ris', 'negara kesatuan', 'nkri'] },
         { t: 'UUDS 1950', k: ['undang undang dasar sementara', 'uuds 1950', 'uuds'] },
         { t: 'Kabinet Natsir', k: ['kabinet natsir', 'natsir'] },
@@ -77,19 +95,28 @@
         { t: 'Pemberontakan APRA', k: ['pemberontakan apra', 'apra'] },
         { t: 'Pemberontakan Andi Azis', k: ['pemberontakan andi azis', 'pemberontakan andi aziz', 'andi azis', 'andi aziz'] },
         { t: 'Pemberontakan RMS', k: ['republik maluku selatan', 'rms'] },
-        { t: 'Pemberontakan DI/TII', k: ['darul islam', 'di tii', 'ditii'] },
-        { t: 'Peristiwa 17 Oktober 1952', k: ['peristiwa 17 oktober', '17 oktober 1952', '17 oktober'] }
+        { t: 'Pemberontakan DI/TII Kartosuwiryo', k: ['kartosuwiryo', 'darul islam', 'di tii', 'ditii'] },
+        { t: 'Peristiwa 17 Oktober 1952', k: ['peristiwa 17 oktober', '17 oktober 1952', '17 oktober'] },
+        /* 14-17 : kabinet tambahan */
+        { t: 'Kabinet Burhanuddin Harahap', k: ['kabinet burhanuddin harahap', 'burhanuddin harahap', 'burhanuddin'] },
+        { t: 'Kabinet Halim', k: ['kabinet halim', 'abdul halim', 'halim'] },
+        { t: 'Kabinet Hatta (RIS)', k: ['kabinet hatta', 'kabinet ris', 'kabinet republik indonesia serikat'] },
+        { t: 'Kabinet Ali Sastroamidjojo II', k: ['kabinet ali sastroamidjojo ii', 'kabinet ali sastroamijoyo ii', 'kabinet ali 2', 'kabinet ali ii'] },
+        /* 18-20 : pemberontakan tambahan */
+        { t: 'Pemberontakan Batalyon 426 di Kudus 1951', k: ['batalyon 426', 'pemberontakan batalyon 426', 'kudus'] },
+        { t: 'Pemberontakan Ibnu Hajar di Kalimantan Selatan', k: ['ibnu hajar', 'pemberontakan ibnu hajar'] },
+        { t: 'Pemberontakan Kahar Muzakkar di Sulawesi Selatan', k: ['kahar muzakkar', 'kahar muzakar', 'di tii sulawesi'] }
       ],
       candidates: [
-        { id: 'R3-A', text: 'Sebutkan kabinet dan kebijakan pemerintah pada masa Demokrasi Liberal awal.', pick: [2, 3, 4, 5, 6, 8, 7] },
-        { id: 'R3-B', text: 'Sebutkan pemberontakan dan peristiwa politik dalam negeri pada tahun 1950 sampai 1952.', pick: [9, 10, 11, 12, 13, 0, 1] },
-        { id: 'R3-C', text: 'Sebutkan kebijakan ekonomi, kabinet, dan tonggak awal negara kesatuan.', pick: [0, 1, 6, 7, 8, 2, 4] }
+        { id: 'R3-A', text: 'Sebutkan kabinet yang pernah memerintah pada masa Demokrasi Liberal.', pick: [2, 3, 4, 5, 14, 15, 16, 17] },
+        { id: 'R3-B', text: 'Sebutkan pemberontakan dan gejolak politik dalam negeri pada tahun 1950 sampai 1952.', pick: [9, 10, 11, 12, 13, 18, 19, 20] }
       ]
     },
 
     /* RONDE 4 : pemilu dan dinamika politik Demokrasi Liberal 1955-1958 */
     {
       pool: [
+        /* 0-9 : pool lama */
         { t: 'Pemilu DPR 29 September 1955', k: ['pemilu dpr', 'pemilu 1955', '29 september 1955'] },
         { t: 'Pemilihan Konstituante 15 Desember 1955', k: ['pemilihan konstituante', 'konstituante', '15 desember 1955'] },
         { t: 'PNI (Partai Nasional Indonesia)', k: ['partai nasional indonesia', 'pni'] },
@@ -99,29 +126,47 @@
         { t: 'Konferensi Asia Afrika 1955 dengan hasil Dasasila Bandung', k: ['dasasila bandung', 'konferensi asia afrika', 'asia afrika', 'kaa'] },
         { t: 'Deklarasi Djuanda 13 Desember 1957', k: ['deklarasi djuanda', 'deklarasi juanda', 'djuanda', 'juanda', 'wawasan nusantara'] },
         { t: 'Konsepsi Presiden 1957', k: ['konsepsi presiden', 'konsepsi'] },
-        { t: 'Pemberontakan PRRI Permesta 1958', k: ['prri permesta', 'prri', 'permesta'] }
+        { t: 'Pemberontakan PRRI Permesta 1958', k: ['prri permesta', 'prri', 'permesta'] },
+        /* 10-13 : partai tambahan */
+        { t: 'PSI (Partai Sosialis Indonesia)', k: ['partai sosialis indonesia', 'psi'] },
+        { t: 'Parkindo (Partai Kristen Indonesia)', k: ['partai kristen indonesia', 'parkindo'] },
+        { t: 'Partai Katolik', k: ['partai katolik', 'katolik'] },
+        { t: 'PSII (Partai Syarikat Islam Indonesia)', k: ['partai syarikat islam indonesia', 'syarikat islam', 'psii'] },
+        /* 14-15 : peristiwa tambahan */
+        { t: 'Peristiwa Cikini 1957', k: ['peristiwa cikini', 'percobaan pembunuhan soekarno', 'cikini'] },
+        { t: 'Mundurnya Mohammad Hatta sebagai wakil presiden 1956', k: ['hatta mundur', 'mundurnya hatta', 'dwitunggal pecah', 'pengunduran diri hatta'] }
       ],
       candidates: [
-        { id: 'R4-A', text: 'Sebutkan partai besar dan pemilu yang berlangsung pada tahun 1955.', pick: [2, 3, 4, 5, 0, 1] },
-        { id: 'R4-B', text: 'Sebutkan peristiwa politik penting pada tahun 1955 sampai 1958.', pick: [0, 6, 7, 8, 9, 1] },
-        { id: 'R4-C', text: 'Sebutkan partai dan peristiwa politik pada masa Demokrasi Liberal 1955 sampai 1958.', pick: [3, 5, 6, 7, 9, 4] }
+        { id: 'R4-A', text: 'Sebutkan partai politik peserta Pemilu 1955.', pick: [3, 2, 4, 5, 10, 11, 12, 13] },
+        { id: 'R4-B', text: 'Sebutkan peristiwa politik penting pada tahun 1955 sampai 1958.', pick: [0, 6, 7, 8, 9, 1, 14, 15] }
       ]
     },
 
     /* RONDE 5 : akhir Orde Lama 1959-1966 */
     {
       pool: [
+        /* 0-5 : pool lama */
         { t: 'Dekrit Presiden 5 Juli 1959', k: ['dekrit presiden', 'dekrit', '5 juli 1959'] },
         { t: 'Demokrasi Terpimpin', k: ['demokrasi terpimpin', 'terpimpin'] },
         { t: 'Trikora 1961', k: ['tri komando rakyat', 'trikora'] },
-        { t: 'Konfrontasi Malaysia dan Dwikora 1963-1966', k: ['konfrontasi malaysia', 'ganyang malaysia', 'konfrontasi', 'dwikora', 'dwi komando rakyat'] },
+        { t: 'Konfrontasi Malaysia 1963-1966', k: ['konfrontasi malaysia', 'ganyang malaysia', 'konfrontasi'] },
         { t: 'Peristiwa G30S 1965', k: ['30 september 1965', 'g30s pki', 'g30s', 'g 30 s pki', 'g 30 s', 'gestapu'] },
-        { t: 'Supersemar 11 Maret 1966', k: ['surat perintah 11 maret', '11 maret 1966', 'supersemar'] }
+        { t: 'Supersemar 11 Maret 1966', k: ['surat perintah 11 maret', '11 maret 1966', 'supersemar'] },
+        /* 6-15 : tambahan */
+        { t: 'Tritura 1966', k: ['tritura', 'tri tuntutan rakyat'] },
+        { t: 'Manipol USDEK', k: ['manipol usdek', 'manipol', 'usdek', 'manifesto politik'] },
+        { t: 'Nasakom', k: ['nasakom'] },
+        { t: 'Sanering uang 1959', k: ['sanering', 'sanering uang', 'sanering 1959'] },
+        { t: 'Indonesia keluar dari PBB 1965', k: ['keluar dari pbb', 'keluar pbb', 'indonesia keluar pbb'] },
+        { t: 'Dwikora 1964', k: ['dwikora', 'dwi komando rakyat'] },
+        { t: 'Pembentukan DPR-GR 1960', k: ['dpr gr', 'dprgr', 'dewan perwakilan rakyat gotong royong'] },
+        { t: 'Pembebasan Irian Barat (Operasi Mandala) 1962', k: ['operasi mandala', 'pembebasan irian barat', 'irian barat', 'mandala'] },
+        { t: 'Pembubaran PKI 12 Maret 1966', k: ['pembubaran pki', 'pki dibubarkan', '12 maret 1966'] },
+        { t: 'Kabinet 100 Menteri 1966', k: ['kabinet 100 menteri', 'kabinet seratus menteri', '100 menteri', 'kabinet dwikora yang disempurnakan'] }
       ],
       candidates: [
-        { id: 'R5-A', text: 'Sebutkan kebijakan dan peristiwa penting masa Orde Lama tahun 1959 sampai 1966.', pick: [0, 1, 2, 3, 5] },
-        { id: 'R5-B', text: 'Sebutkan peristiwa dan kebijakan yang mewarnai masa Demokrasi Terpimpin.', pick: [4, 5, 3, 1, 0] },
-        { id: 'R5-C', text: 'Sebutkan dekrit, surat perintah, atau kebijakan yang dikeluarkan Presiden Soekarno.', pick: [0, 5, 1, 2, 3] }
+        { id: 'R5-A', text: 'Sebutkan kebijakan dan keputusan politik Presiden Soekarno pada masa Orde Lama tahun 1959 sampai 1966.', pick: [0, 1, 7, 8, 9, 2, 11, 12] },
+        { id: 'R5-B', text: 'Sebutkan peristiwa penting menjelang berakhirnya Orde Lama tahun 1959 sampai 1966.', pick: [4, 5, 3, 6, 10, 13, 14, 15] }
       ]
     }
   ];
